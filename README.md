@@ -7,10 +7,10 @@
 
 a.ภาษาที่ใช้ Javascript ใช้ React framework และ ใช้ antd / tailwind ในการ customize style
 b.วิธีการลงโปรแกรม
-ติดตั้ง vscode สำหรับ Code editor 
-ติดตั้ง install yarn installer on window
-ติดตั้ง install node.js installer (check cmd yarn-v , node-v)
-สร้างโปรเจคด้วยคำสั่ง npm create vite@latest ขื่อโปรเจ็ค -- --template react
-และทำการติดตั้ง library ในการจัดการต่างๆของ ui 
-ทำการ เริ่มโปรเจคด้วยการ yarn/npm start หรือ npm run dev 
+-ติดตั้ง vscode สำหรับ Code editor 
+-ติดตั้ง install yarn installer on window
+-ติดตั้ง install node.js installer (check cmd yarn-v , node-v)
+-สร้างโปรเจคด้วยคำสั่ง npm create vite@latest ขื่อโปรเจ็ค -- --template react
+ และทำการติดตั้ง library ในการจัดการต่างๆของ ui 
+-ทำการ เริ่มโปรเจคด้วยการ yarn/npm start หรือ npm run dev 
 *สามารถติดตั้ง extension เพิ่มเพื่อใช้ในการแก้ไขโค๊ดให้สะดวกและรวดเร็วขึ้นได้
