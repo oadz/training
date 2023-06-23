@@ -1,58 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, Button } from "antd";
-import {
-  EditOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { Modal, Form, Input, Select, Button, Alert } from "antd";
+import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
-const { Option } = Select;
 
 export const ModalView = (props) => {
   const {
     visible,
-    products,
     selectedView,
-    handleCancel,
     editData,
     setProducts,
     setEditData,
     setVisible,
+    productView,
+    setValid,
+    valid,
   } = props;
   const { TextArea } = Input;
-  const [imageUrl, setImageUrl] = useState(products.img);
-
-
-  const productView = products.find((item) => {
-    return selectedView === item.id;
-  });
-  // console.log("products", products);
-  // console.log("productView", productView);
+  // const [imageUrl, setImageUrl] = useState(products.img);
+  const [validationMessages, setValidationMessages] = useState([]);
   const [dataToEdit, setDataToEdit] = useState({
-    title: null,
-    detail: null,
-    price: 1,
-    img: "",
-    id: "",
-    currency: "Baht",
+    title: productView?.title,
+    detail: productView?.detail,
+    price: productView?.price,
+    img: productView?.img,
+    id: productView?.id,
+    currency: productView?.currency,
   });
+  console.log("productView", productView);
   const editButton = () => {
     setEditData(!editData);
   };
 
   const handleEdit = (id) => {
     if (!editData) {
-      setVisible(false)
+      setVisible(false);
     } else {
-      setProducts((item) => {
-        const editedIndex = item.findIndex((data) => data.id === id);
-        item[editedIndex] = dataToEdit
-        return [...item];
-      });
-      setEditData(false)
-      setVisible(false)
+      if (!dataToEdit.title || !dataToEdit.detail) {
+        validateForm();
+        setVisible(true);
+      } else {
+        setProducts((item) => {
+          const editedIndex = item.findIndex((data) => data.id === id);
+          item[editedIndex] = dataToEdit;
+          return [...item];
+        });
+        setEditData(false);
+        setVisible(false);
+      }
     }
-
   };
+
   // const handleChange = (event) => {
   //   const { files } = event.target;
   //   const url = URL.createObjectURL(files[0]);
@@ -62,43 +59,52 @@ export const ModalView = (props) => {
   //     img: url,
   //   }));
   // };
+  const validateForm = () => {
+    console.log("1");
+    setValidationMessages([]);
+    let messages = [];
+    if (!dataToEdit.title) {
+      messages.push("Title is required");
+    }
+    if (!dataToEdit.detail) {
+      messages.push("Detail is required");
+    }
+    setValidationMessages(messages);
+    if (dataToEdit.title && dataToEdit.detail) {
+      setValid(true);
+    } else setValid(false);
+  };
 
-  // useEffect(() => {
-  //   setDataToEdit((data) => ({
-  //     ...data,
-  //     title: productView ? productView.title : "Unknown",
-  //     detail: productView ? productView.detail : "Unknown",
-  //     img: productView ? productView.img : noImg,
-  //     price: productView ? productView.price : 0,
-  //     id: productView ? productView.id : "Unknown"
-  //   }));
-  // }, [selectedView, editData, visible]);
   function setIdEdit(id, value) {
-    console.log("aaaaaaaaaaaaa", value);
-    console.log("aaaaaaaaaaaaa", products);
-
     setDataToEdit((data) => ({ ...data, [id]: value }));
-  };
-
+  }
   const handleSelected = (value) => {
-    setIdEdit("currency", value)
+    setIdEdit("currency", value);
   };
-  const handleClose = (id) => {
-    if (!dataToEdit.title || !dataToEdit.detail) {
-      setDataToEdit((data) => ({
-        ...data,
-        title: products.title
-        // detail: productView ? productView.detail : "Unknown",
-        // img: productView ? productView.img : noImg,
-        // price: productView ? productView.price : 0,
-        // id: productView ? productView.id : "Unknown"
-      }));
-    } else handleEdit(id)
+  const handleClose = () => {
+    setDataToEdit((data) => ({
+      ...data,
+      id: productView.id,
+      title: productView.title,
+      detail: productView.detail,
+      img: productView ? productView.img : noImg,
+      price: productView.price,
+      currency: productView ? productView.currency : "bath",
+    }));
+    setVisible(false);
   };
-  // console.log("productView", productView);
-  // console.log("dataToEdit", dataToEdit);
-  // console.log("products", products);
 
+  useEffect(() => {
+    setDataToEdit((data) => ({
+      ...data,
+      title: productView ? productView.title : "Unknown",
+      detail: productView ? productView.detail : "Unknown",
+      img: productView ? productView.img : noImg,
+      price: productView ? productView.price : 0,
+      id: productView ? productView.id : "Unknown",
+      currency: productView ? productView.currency : "bath",
+    }));
+  }, [selectedView, editData, visible]);
   return (
     <Modal
       open={visible}
@@ -107,7 +113,6 @@ export const ModalView = (props) => {
       className="p-20"
       centered
       footer={null}
-      onCancel={handleCancel}
     >
       <Form>
         <div className="header">
@@ -115,18 +120,24 @@ export const ModalView = (props) => {
             className="text-left font-extrabold text-xl flex "
             style={{ justifyContent: "space-between", width: "100%" }}
           >
+            {!valid && (
+              <Alert
+                onClose={() => setValid(true)}
+                message="Error"
+                description={validationMessages.map((vm) => (
+                  <li key={vm}>{vm}</li>
+                ))}
+                type="error"
+                closable
+                className="alert"
+                showIcon
+              />
+            )}
             <Input
-              // placeholder={productView ? productView.title : "Unknown"}
               className="w-3/5"
               maxLength={20}
               onChange={(e) => setIdEdit("title", e.target.value)}
-              // defaultValue={productView ? productView.title : "Unknown"}
-              // value={dataToEdit ? dataToEdit.title : productView.title}
-              // value={productView ? products.title : productView.title}
-              // defaultValue={products?.title}
-              // value={products?.title}
-              defaultValue={productView ? productView.title : "Unknown"}
-              required
+              value={dataToEdit.title}
               disabled={!editData}
             />
             <div className="flex items-center gap-1">
@@ -135,7 +146,7 @@ export const ModalView = (props) => {
                   editButton();
                 }}
               />
-              <CloseOutlined onClick={handleCancel} />
+              <CloseOutlined onClick={handleClose} />
             </div>
           </h1>
         </div>
@@ -146,7 +157,7 @@ export const ModalView = (props) => {
             className="w-full"
             style={{
               width: "100%",
-              maxHeight: 175
+              maxHeight: 175,
             }}
           ></img>
           {/* <Input type="file" onChange={handleChange} disabled={!editData}></Input> */}
@@ -156,43 +167,44 @@ export const ModalView = (props) => {
               showCount
               maxLength={100}
               onChange={(e) => setIdEdit("detail", e.target.value)}
-              // placeholder={productView ? productView.detail : "Unknown"}
               style={{
                 height: 80,
                 resize: "none",
               }}
               allowClear
-              defaultValue={productView ? productView.detail : "Unknown"}
-              // value={productView ? productView.detail : "Unknown"}
+              value={dataToEdit.detail}
               disabled={!editData}
             />
             <div className="text-right mt-5 flex items-center">
               <Input
                 type="number"
-                style={{ width: "40%" }}
-                defaultValue={productView ? productView.price : "Unknown"}
+                style={{ width: "35%", marginRight: 10 }}
+                value={dataToEdit.price}
                 disabled={!editData}
-                maxLength={2}
-                onChange={(e) => setIdEdit("price", e.target.value)} />
+                onChange={(e) =>
+                  e.target.value.length <= 5 &&
+                  setIdEdit("price", e.target.value)
+                }
+              />
               <Select
-                defaultValue={productView ? productView.currency : "Unknown"}
+                value={dataToEdit.currency}
                 style={{
-                  width: 100,
+                  width: 80,
                 }}
                 disabled={!editData}
                 onChange={handleSelected}
                 options={[
                   {
-                    value: 'Baht',
-                    label: 'Baht',
+                    value: "Baht",
+                    label: "Baht",
                   },
                   {
-                    value: 'Dollar',
-                    label: 'Dollar',
+                    value: "Dollar",
+                    label: "Dollar",
                   },
                   {
-                    value: 'Rupee',
-                    label: 'Rupee',
+                    value: "Rupee",
+                    label: "Rupee",
                   },
                 ]}
               />
@@ -206,20 +218,16 @@ export const ModalView = (props) => {
                 color: "black",
                 borderColor: "#bfbfbf",
               }}
-              // onClick={() => { handleClose(productView.id) }}
-              onClick={handleCancel}
-            // onClick={() => {
-            //   handleCancel
-            //   handleClose(productView.id);
-            // }}
+              onClick={handleClose}
             >
-
               Cancle
             </Button>
             <Button
               type="primary"
               style={{ background: "#4545a2", color: "white" }}
-              onClick={() => { handleEdit(productView.id) }}
+              onClick={() => {
+                handleEdit(productView.id);
+              }}
             >
               {editData ? "Edit" : "OK"}
             </Button>
