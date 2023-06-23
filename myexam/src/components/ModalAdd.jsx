@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Avatar, Card, Modal, Form, Input, Upload, Select, Button, InputNumber, message, Alert } from "antd";
+import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
-
-const { Option } = Select;
 
 export const ModalAdd = (props) => {
   const {
@@ -24,12 +22,12 @@ export const ModalAdd = (props) => {
   const [valid, setValid] = useState(true);
   const [validationMessages, setValidationMessages] = useState([]);
 
-  const fileRef = useRef()
+  const fileRef = useRef();
   const editButton = () => {
     setEditData(!editData);
   };
   const handleOk = () => {
-    fileRef.current.value = null
+    fileRef.current.value = null;
     setShowModalAdd(false);
   };
 
@@ -48,73 +46,32 @@ export const ModalAdd = (props) => {
     setImageUrl(url);
   };
   const handleSelected = (value) => {
-    setCurrencyToEdit(value)
+    setCurrencyToEdit(value);
   };
-  // const handlerErrorMessage = (id, value) => {
-  //   setCurrencyToEdit(value)
-  // };
   const handleAdd = () => {
     if (!titleToEdit || !detailToEdit) {
       validateForm();
     } else {
-      fileRef.current.value = null
+      fileRef.current.value = null;
       setProducts((data) => {
         return [
           ...data,
           {
-            title: titleToEdit ? titleToEdit : "No title",
-            detail: detailToEdit ? detailToEdit : "No description",
+            id: !products.length
+              ? data.length + 1
+              : products[products.length - 1].id + 1 || 1,
+            title: titleToEdit,
+            detail: detailToEdit,
             price: priceToEdit,
             img: imageUrl ? imageUrl : noImg,
-            id: products.length === 0 ? data.length + 1 : products[products.length - 1].id + 1 ||
-              1,
-            // id: data.length + 1,
             currency: currencyToEdit,
           },
         ];
       });
       setShowModalAdd(false);
     }
-
-    // console.log("checkInput", inputTitle.value === '');
-    // if (inputTitle.value === '') {
-    //   console.log("1");
-    //   error("inputTitle", "Please fill title")
-    //   setCurrencyToEdit(false)
-    //   // setValidate("inputTitle", "Please fill title")
-    // }
-    // if (inputDetail.value === '') {
-    //   console.log("2");
-
-    //   setValidate("inputDetail", "Please fill detail")
-    // }
-    // if (!titleToEdit) {
-    //   console.log("tirrle");
-    //   handlerErrorMessage("title",)
-    //   setValidate(true)
-    // } else {
-    //   fileRef.current.value = null
-    //   setProducts((data) => {
-    //     return [
-    //       ...data,
-    //       {
-    //         title: titleToEdit ? titleToEdit : "No title",
-    //         detail: detailToEdit ? detailToEdit : "No description",
-    //         price: priceToEdit,
-    //         img: imageUrl ? imageUrl : noImg,
-    //         id: products.length === 0 ? data.length + 1 : products[products.length - 1].id + 1 ||
-    //           1,
-    //         // id: data.length + 1,
-    //         currency: currencyToEdit,
-    //       },
-    //     ];
-    //   });
-    //   setShowModalAdd(false);
-    // }
   };
   const validateForm = () => {
-    console.log("1");
-    // const { fullName, contact } = formData;
     setValidationMessages([]);
     let messages = [];
     if (!titleToEdit) {
@@ -125,29 +82,16 @@ export const ModalAdd = (props) => {
     }
     setValidationMessages(messages);
     if (titleToEdit && detailToEdit) {
-      setValid(true)
-    } else setValid(false)
+      setValid(true);
+    } else setValid(false);
+  };
 
-
-  }
-  // // const error = () => {
-  // //   Modal.error({
-  // //     title: 'This is an error message',
-  // //     content: validationMessages.map(vm => <li key={vm}>{vm}</li>)
-  // //   });
-  // // };
-  // const error = () => {
-  //   Modal.error({
-  //     title: 'This is an error message',
-  //     content: validationMessages.map(txt => <li key={txt}>{txt}</li>)
-  //   });
-  // };
   useEffect(() => {
-    setTitleToEdit("")
-    setDetail("")
-    setImageUrl()
-    setItemPrice(100)
-    setValid(true)
+    setTitleToEdit("");
+    setDetail("");
+    setImageUrl();
+    setItemPrice(100);
+    setValid(true);
   }, [showModalAdd]);
 
   return (
@@ -158,29 +102,25 @@ export const ModalAdd = (props) => {
       centered
       footer={null}
     >
-      {!valid &&
+      {!valid && (
         <Alert
           onClose={() => setValid(true)}
           message="Error"
-          description={validationMessages.map(vm => <li key={vm}>{vm}</li>)}
+          description={validationMessages.map((vm) => (
+            <li key={vm}>{vm}</li>
+          ))}
           type="error"
           closable
           className="alert"
-          // onClose={onClose}
           showIcon
-
-        // style={{ zIndex: 5, position: "absolute", width: "85%", bottom: "50%" }}
         />
-      }
-      {/* {!validate && error()} */}
-
+      )}
       <Form>
         <div className="header">
           <h1
             className="text-left font-extrabold text-xl flex "
             style={{ justifyContent: "space-between" }}
           >
-
             <Input
               placeholder="title"
               className="w-3/5 absolute"
@@ -199,20 +139,16 @@ export const ModalAdd = (props) => {
               <CloseOutlined onClick={handleCancel} />
             </div>
           </h1>
-
         </div>
-        {/* {!currencyToEdit && validate.inputTitle} */}
         <div className="w-full mt-5 text-center">
           <img
             src={imageUrl ? imageUrl : noImg}
             alt="avatar"
             style={{
               width: "100%",
-              maxHeight: 175
+              maxHeight: 175,
             }}
           />
-
-          {/* {validationMessages.map(vm => <li key={vm}>{vm}</li>)} */}
           <input type="file" ref={fileRef} onChange={handleChange}></input>
 
           <div className="mt-3 mb-5">
@@ -232,46 +168,34 @@ export const ModalAdd = (props) => {
               />
             </div>
             <div className="text-right mt-5 flex items-center">
-              {/* <InputNumber
-                type="number"
-                style={{ width: "40%" }}
-                value={priceToEdit}
-                min={1}
-                max={99999}
-                onChange={setItemPrice} /> */}
               <Input
                 type="number"
-                style={{ width: "40%" }}
+                style={{ width: "35%", marginRight: 10 }}
                 value={priceToEdit}
-                onChange={(e) => setItemPrice(e.target.value)}
+                onChange={(e) =>
+                  e.target.value.length <= 5 && setItemPrice(e.target.value)
+                }
                 id="inputPrice"
               />
-
-              {/* <input value={priceToEdit} type="number" onChange={(e) => setItemPrice(e.target.value)} /> */}
               <Select
                 defaultValue="Baht"
                 style={{
-                  width: 100,
+                  width: 80,
                 }}
                 onChange={handleSelected}
                 options={[
                   {
-                    value: 'Baht',
-                    label: 'Baht',
+                    value: "Baht",
+                    label: "Baht",
                   },
                   {
-                    value: 'Dollar',
-                    label: 'Dollar',
+                    value: "Dollar",
+                    label: "Dollar",
                   },
                   {
-                    value: 'Rupee',
-                    label: 'Rupee',
+                    value: "Rupee",
+                    label: "Rupee",
                   },
-                  // {
-                  //   value: 'disabled',
-                  //   label: 'Disabled',
-                  //   disabled: true,
-                  // },
                 ]}
               />
             </div>
@@ -289,12 +213,7 @@ export const ModalAdd = (props) => {
           >
             Cancle
           </Button>
-          <Button
-            type="primary"
-            className="submit"
-            // style={{ background: "#4545a2", color: "white" }}
-            onClick={() => handleAdd()}
-          >
+          <Button type="primary" className="submit" onClick={() => handleAdd()}>
             Add
           </Button>
         </div>

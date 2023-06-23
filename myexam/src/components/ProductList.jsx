@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unknown-property */
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DeleteTwoTone,
   ExclamationCircleFilled,
   EyeTwoTone,
 } from "@ant-design/icons";
-import { Avatar, Card, Modal, Form, Button } from "antd";
+import { Avatar, Card, Modal, Button } from "antd";
 import { ModalView } from "./ModalView";
 import { ModalAdd } from "./ModalAdd";
 import noImg from "./../assets/No_img.png";
@@ -17,59 +17,57 @@ const { Meta } = Card;
 function ProductList() {
   const [products, setProducts] = useState([
     {
+      id: 1,
       title: "Cabbage",
       detail: "aaaaaaaaaaaaaaaa",
       price: 500,
       img: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
-      id: 1,
       currency: "Baht",
     },
   ]);
   const [visible, setVisible] = useState(false);
   const [selectedView, setSelectedView] = useState();
-  const [form] = Form.useForm();
   const [editData, setEditData] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
-  // console.log('selectedView', selectedView);
+  const [valid, setValid] = useState(true);
+
   const showModal = () => {
     setVisible(true);
     setEditData(false);
+    setValid(true);
   };
-
-  const handleSubmit = (values) => {
-    console.log(values);
-  };
+  const productView = products.find((item) => {
+    return selectedView === item.id;
+  });
 
   const handleCancel = () => {
     setVisible(false);
-    // form.resetFields();
   };
   const showDeleteConfirm = (id) => {
     confirm({
-      title: "Are you sure delete this task?",
+      title: "Are you sure delete this product?",
       icon: <ExclamationCircleFilled />,
-      content: "Some descriptions",
-      okText: "Yes",
+      okText: "Delete",
       okType: "danger",
       cancelText: "No",
       onOk() {
         const filtered = products.filter((item) => item.id !== id);
         setProducts(filtered);
       },
-      onCancel() { },
     });
   };
   const modalAddOpen = () => {
     setShowModalAdd(true);
   };
-  // console.log("products", products);
-
+  console.log("product", products);
   return (
     <div
       className="flex flex-row flex-wrap gap-4 mt-4 px-10"
       style={{ maxWidth: 700 }}
     >
-      <Button onClick={() => modalAddOpen()} className="w-full">Add Products</Button>
+      <Button onClick={() => modalAddOpen()} className="w-full">
+        Add Products
+      </Button>
       {products.map((item) => (
         <Card
           key={item.id}
@@ -79,9 +77,11 @@ function ProductList() {
               alt="example"
               style={{
                 width: "100%",
-                maxHeight: 175
+                maxHeight: 175,
               }}
-              src={item.img ? item.img : noImg} />}
+              src={item.img || noImg}
+            />
+          }
           actions={[
             <EyeTwoTone
               key="view"
@@ -113,13 +113,15 @@ function ProductList() {
       <ModalView
         visible={visible}
         setVisible={setVisible}
-        handleSubmit={handleSubmit}
         handleCancel={handleCancel}
         products={products}
         setProducts={setProducts}
         selectedView={selectedView}
         editData={editData}
         setEditData={setEditData}
+        productView={productView}
+        setValid={setValid}
+        valid={valid}
       />
       <ModalAdd
         showModalAdd={showModalAdd}
