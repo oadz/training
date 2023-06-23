@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DeleteTwoTone,
   ExclamationCircleFilled,
@@ -22,6 +22,7 @@ function ProductList() {
       price: 500,
       img: "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
       id: 1,
+      currency: "Baht",
     },
   ]);
   const [visible, setVisible] = useState(false);
@@ -29,7 +30,7 @@ function ProductList() {
   const [form] = Form.useForm();
   const [editData, setEditData] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
-
+  // console.log('selectedView', selectedView);
   const showModal = () => {
     setVisible(true);
     setEditData(false);
@@ -41,7 +42,7 @@ function ProductList() {
 
   const handleCancel = () => {
     setVisible(false);
-    form.resetFields();
+    // form.resetFields();
   };
   const showDeleteConfirm = (id) => {
     confirm({
@@ -55,12 +56,14 @@ function ProductList() {
         const filtered = products.filter((item) => item.id !== id);
         setProducts(filtered);
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
   const modalAddOpen = () => {
     setShowModalAdd(true);
   };
+  // console.log("products", products);
+
   return (
     <div
       className="flex flex-row flex-wrap gap-4 mt-4 px-10"
@@ -71,7 +74,14 @@ function ProductList() {
         <Card
           key={item.id}
           style={{ width: 300 }}
-          cover={<img alt="example" src={item.img ? item.img : noImg} />}
+          cover={
+            <img
+              alt="example"
+              style={{
+                width: "100%",
+                maxHeight: 175
+              }}
+              src={item.img ? item.img : noImg} />}
           actions={[
             <EyeTwoTone
               key="view"
