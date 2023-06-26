@@ -3,7 +3,7 @@ import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
 
-export const ModalView = (props) => {
+export const ModalView = (props: any) => {
   const {
     visible,
     selectedView,
@@ -17,21 +17,27 @@ export const ModalView = (props) => {
   } = props;
   const { TextArea } = Input;
   // const [imageUrl, setImageUrl] = useState(products.img);
-  const [validationMessages, setValidationMessages] = useState([]);
-  const [dataToEdit, setDataToEdit] = useState({
+  const [validationMessages, setValidationMessages] = useState<string[]>([]);
+  const [dataToEdit, setDataToEdit] = useState<{
+    id: number;
+    title: string;
+    detail: string;
+    price: number;
+    img: string;
+    currency: string;
+  }>({
+    id: productView?.id,
     title: productView?.title,
     detail: productView?.detail,
     price: productView?.price,
     img: productView?.img,
-    id: productView?.id,
     currency: productView?.currency,
   });
-  console.log("productView", productView);
   const editButton = () => {
     setEditData(!editData);
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id: number) => {
     if (!editData) {
       setVisible(false);
     } else {
@@ -39,8 +45,8 @@ export const ModalView = (props) => {
         validateForm();
         setVisible(true);
       } else {
-        setProducts((item) => {
-          const editedIndex = item.findIndex((data) => data.id === id);
+        setProducts((item: any) => {
+          const editedIndex = item.findIndex((data: any) => data.id === id);
           item[editedIndex] = dataToEdit;
           return [...item];
         });
@@ -50,19 +56,18 @@ export const ModalView = (props) => {
     }
   };
 
-  // const handleChange = (event) => {
-  //   const { files } = event.target;
-  //   const url = URL.createObjectURL(files[0]);
-  //   setImageUrl(url)
-  //   setDataToEdit((data) => ({
-  //     ...data,
-  //     img: url,
-  //   }));
-  // };
+  const handleChange = (event: any) => {
+    const { files } = event.target;
+    const url = URL.createObjectURL(files[0]);
+    // setImageUrl(url);
+    setDataToEdit((data: any) => ({
+      ...data,
+      img: url,
+    }));
+  };
   const validateForm = () => {
-    console.log("1");
     setValidationMessages([]);
-    let messages = [];
+    const messages: string[] = [];
     if (!dataToEdit.title) {
       messages.push("Title is required");
     }
@@ -75,14 +80,14 @@ export const ModalView = (props) => {
     } else setValid(false);
   };
 
-  function setIdEdit(id, value) {
+  function setIdEdit(id: string, value: any) {
     setDataToEdit((data) => ({ ...data, [id]: value }));
   }
   const handleSelected = (value) => {
     setIdEdit("currency", value);
   };
   const handleClose = () => {
-    setDataToEdit((data) => ({
+    setDataToEdit((data: any) => ({
       ...data,
       id: productView.id,
       title: productView.title,
@@ -95,13 +100,13 @@ export const ModalView = (props) => {
   };
 
   useEffect(() => {
-    setDataToEdit((data) => ({
+    setDataToEdit((data: any) => ({
       ...data,
+      id: productView ? productView.id : "Unknown",
       title: productView ? productView.title : "Unknown",
       detail: productView ? productView.detail : "Unknown",
       img: productView ? productView.img : noImg,
       price: productView ? productView.price : 0,
-      id: productView ? productView.id : "Unknown",
       currency: productView ? productView.currency : "bath",
     }));
   }, [selectedView, editData, visible]);
@@ -124,7 +129,7 @@ export const ModalView = (props) => {
               <Alert
                 onClose={() => setValid(true)}
                 message="Error"
-                description={validationMessages.map((vm) => (
+                description={validationMessages.map((vm: any) => (
                   <li key={vm}>{vm}</li>
                 ))}
                 type="error"
@@ -133,6 +138,7 @@ export const ModalView = (props) => {
                 showIcon
               />
             )}
+            {/* <InputForm></InputForm> */}
             <Input
               className="w-3/5"
               maxLength={20}
@@ -153,14 +159,18 @@ export const ModalView = (props) => {
 
         <div className="w-full mt-5">
           <img
-            src={productView ? productView.img : noImg}
+            src={dataToEdit.img}
             className="w-full"
             style={{
               width: "100%",
               maxHeight: 175,
             }}
           ></img>
-          {/* <Input type="file" onChange={handleChange} disabled={!editData}></Input> */}
+          <Input
+            type="file"
+            onChange={handleChange}
+            disabled={!editData}
+          ></Input>
 
           <div className="mt-5 mb-5">
             <TextArea
