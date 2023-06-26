@@ -32,6 +32,7 @@ function ProductList() {
       currency: "Baht",
     },
   ]);
+
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedView, setSelectedView] = useState<number>();
   const [editData, setEditData] = useState<boolean>(false);
