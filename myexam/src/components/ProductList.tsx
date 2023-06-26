@@ -13,9 +13,16 @@ import noImg from "./../assets/No_img.png";
 
 const { confirm } = Modal;
 const { Meta } = Card;
-
+type Product = {
+  id: number;
+  title: string;
+  detail: string;
+  price: number;
+  img: string;
+  currency: string;
+};
 function ProductList() {
-  const [products, setProducts] = useState([
+  const [products, setProducts] = useState<Product[]>([
     {
       id: 1,
       title: "Cabbage",
@@ -25,25 +32,26 @@ function ProductList() {
       currency: "Baht",
     },
   ]);
-  const [visible, setVisible] = useState(false);
-  const [selectedView, setSelectedView] = useState();
-  const [editData, setEditData] = useState(false);
-  const [showModalAdd, setShowModalAdd] = useState(false);
-  const [valid, setValid] = useState(true);
+
+  const [visible, setVisible] = useState<boolean>(false);
+  const [selectedView, setSelectedView] = useState<number>();
+  const [editData, setEditData] = useState<boolean>(false);
+  const [showModalAdd, setShowModalAdd] = useState<boolean>(false);
+  const [valid, setValid] = useState<boolean>(true);
 
   const showModal = () => {
     setVisible(true);
     setEditData(false);
     setValid(true);
   };
-  const productView = products.find((item) => {
+  const productView = products.find((item: any) => {
     return selectedView === item.id;
   });
 
   const handleCancel = () => {
     setVisible(false);
   };
-  const showDeleteConfirm = (id) => {
+  const showDeleteConfirm = (id: number) => {
     confirm({
       title: "Are you sure delete this product?",
       icon: <ExclamationCircleFilled />,
@@ -51,7 +59,7 @@ function ProductList() {
       okType: "danger",
       cancelText: "No",
       onOk() {
-        const filtered = products.filter((item) => item.id !== id);
+        const filtered = products.filter((item: any) => item.id !== id);
         setProducts(filtered);
       },
     });
@@ -59,7 +67,6 @@ function ProductList() {
   const modalAddOpen = () => {
     setShowModalAdd(true);
   };
-  console.log("product", products);
   return (
     <div
       className="flex flex-row flex-wrap gap-4 mt-4 px-10"
@@ -68,7 +75,7 @@ function ProductList() {
       <Button onClick={() => modalAddOpen()} className="w-full">
         Add Products
       </Button>
-      {products.map((item) => (
+      {products.map((item: any) => (
         <Card
           key={item.id}
           style={{ width: 300 }}

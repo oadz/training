@@ -3,7 +3,7 @@ import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
 
-export const ModalAdd = (props) => {
+export const ModalAdd = (props: any) => {
   const {
     handleCancel,
     editData,
@@ -14,15 +14,15 @@ export const ModalAdd = (props) => {
     products,
   } = props;
   const { TextArea } = Input;
-  const [imageUrl, setImageUrl] = useState();
-  const [titleToEdit, setTitleToEdit] = useState("");
-  const [detailToEdit, setDetailToEdit] = useState("");
-  const [priceToEdit, setPriceToEdit] = useState(0);
-  const [currencyToEdit, setCurrencyToEdit] = useState("bath");
-  const [valid, setValid] = useState(true);
-  const [validationMessages, setValidationMessages] = useState([]);
+  const [imageUrl, setImageUrl] = useState<any>();
+  const [titleToEdit, setTitleToEdit] = useState<string>("");
+  const [detailToEdit, setDetailToEdit] = useState<string>("");
+  const [priceToEdit, setPriceToEdit] = useState<number>(0);
+  const [currencyToEdit, setCurrencyToEdit] = useState<string>("bath");
+  const [valid, setValid] = useState<boolean>(true);
+  const [validationMessages, setValidationMessages] = useState<string[]>([]);
 
-  const fileRef = useRef();
+  const fileRef = useRef<any>();
   const editButton = () => {
     setEditData(!editData);
   };
@@ -31,21 +31,21 @@ export const ModalAdd = (props) => {
     setShowModalAdd(false);
   };
 
-  const setItemName = (value) => {
+  const setItemName = (value: string) => {
     setTitleToEdit(value);
   };
-  const setItemPrice = (value) => {
+  const setItemPrice = (value: any) => {
     setPriceToEdit(value);
   };
-  const setDetail = (value) => {
+  const setDetail = (value: string) => {
     setDetailToEdit(value);
   };
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     const { files } = event.target;
     const url = URL.createObjectURL(files[0]);
     setImageUrl(url);
   };
-  const handleSelected = (value) => {
+  const handleSelected = (value: any) => {
     setCurrencyToEdit(value);
   };
   const handleAdd = () => {
@@ -53,7 +53,7 @@ export const ModalAdd = (props) => {
       validateForm();
     } else {
       fileRef.current.value = null;
-      setProducts((data) => {
+      setProducts((data: any) => {
         return [
           ...data,
           {
@@ -63,7 +63,7 @@ export const ModalAdd = (props) => {
             title: titleToEdit,
             detail: detailToEdit,
             price: priceToEdit,
-            img: imageUrl ? imageUrl : noImg,
+            img: imageUrl || noImg,
             currency: currencyToEdit,
           },
         ];
@@ -73,7 +73,7 @@ export const ModalAdd = (props) => {
   };
   const validateForm = () => {
     setValidationMessages([]);
-    let messages = [];
+    const messages: string[] = [];
     if (!titleToEdit) {
       messages.push("Title is required");
     }
@@ -89,7 +89,7 @@ export const ModalAdd = (props) => {
   useEffect(() => {
     setTitleToEdit("");
     setDetail("");
-    setImageUrl();
+    setImageUrl(null);
     setItemPrice(100);
     setValid(true);
   }, [showModalAdd]);
@@ -106,7 +106,7 @@ export const ModalAdd = (props) => {
         <Alert
           onClose={() => setValid(true)}
           message="Error"
-          description={validationMessages.map((vm) => (
+          description={validationMessages.map((vm: any) => (
             <li key={vm}>{vm}</li>
           ))}
           type="error"
@@ -142,7 +142,7 @@ export const ModalAdd = (props) => {
         </div>
         <div className="w-full mt-5 text-center">
           <img
-            src={imageUrl ? imageUrl : noImg}
+            src={imageUrl || noImg}
             alt="avatar"
             style={{
               width: "100%",
