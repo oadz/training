@@ -13,18 +13,16 @@ import noImg from "./../assets/No_img.png";
 
 const { confirm } = Modal;
 const { Meta } = Card;
-
+type Product = {
+  id: number;
+  title: string;
+  detail: string;
+  price: number;
+  img: string;
+  currency: string;
+};
 function ProductList() {
-  const [products, setProducts] = useState<
-    {
-      id: number;
-      title: string;
-      detail: string;
-      price: number;
-      img: string;
-      currency: string;
-    }[]
-  >([
+  const [products, setProducts] = useState<Product[]>([
     {
       id: 1,
       title: "Cabbage",

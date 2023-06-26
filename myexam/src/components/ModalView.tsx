@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
-
+type Product = {
+  id: number;
+  title: string;
+  detail: string;
+  price: number;
+  img: string;
+  currency: string;
+};
 export const ModalView = (props: any) => {
   const {
     visible,
@@ -18,14 +25,7 @@ export const ModalView = (props: any) => {
   const { TextArea } = Input;
   // const [imageUrl, setImageUrl] = useState(products.img);
   const [validationMessages, setValidationMessages] = useState<string[]>([]);
-  const [dataToEdit, setDataToEdit] = useState<{
-    id: number;
-    title: string;
-    detail: string;
-    price: number;
-    img: string;
-    currency: string;
-  }>({
+  const [dataToEdit, setDataToEdit] = useState<Product>({
     id: productView?.id,
     title: productView?.title,
     detail: productView?.detail,
@@ -83,7 +83,7 @@ export const ModalView = (props: any) => {
   function setIdEdit(id: string, value: any) {
     setDataToEdit((data) => ({ ...data, [id]: value }));
   }
-  const handleSelected = (value) => {
+  const handleSelected = (value: any) => {
     setIdEdit("currency", value);
   };
   const handleClose = () => {
