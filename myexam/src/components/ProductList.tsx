@@ -10,6 +10,9 @@ import { Avatar, Card, Modal, Button } from "antd";
 import { ModalView } from "./ModalView";
 import { ModalAdd } from "./ModalAdd";
 import noImg from "./../assets/No_img.png";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { removeItem } from "../store/ProductSlice";
 
 const { confirm } = Modal;
 const { Meta } = Card;
@@ -32,19 +35,20 @@ function ProductList() {
       currency: "Baht",
     },
   ]);
-
+  const ProductItems = useSelector((state: RootState) => state.product);
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedView, setSelectedView] = useState<number>();
   const [editData, setEditData] = useState<boolean>(false);
   const [showModalAdd, setShowModalAdd] = useState<boolean>(false);
   const [valid, setValid] = useState<boolean>(true);
+  const dispatch = useDispatch();
 
   const showModal = () => {
     setVisible(true);
     setEditData(false);
     setValid(true);
   };
-  const productView = products.find((item: any) => {
+  const productView = ProductItems.find((item: any) => {
     return selectedView === item.id;
   });
 
@@ -59,8 +63,9 @@ function ProductList() {
       okType: "danger",
       cancelText: "No",
       onOk() {
-        const filtered = products.filter((item: any) => item.id !== id);
-        setProducts(filtered);
+        // const filtered = products.filter((item: any) => item.id !== id);
+        dispatch(removeItem(id));
+        // setProducts(filtered);
       },
     });
   };
@@ -75,7 +80,7 @@ function ProductList() {
       <Button onClick={() => modalAddOpen()} className="w-full">
         Add Products
       </Button>
-      {products.map((item: any) => (
+      {ProductItems.map((item: any) => (
         <Card
           key={item.id}
           style={{ width: 300 }}
