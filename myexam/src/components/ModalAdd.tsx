@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
-
+import { addItem } from "../store/ProductSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
 export const ModalAdd = (props: any) => {
   const {
     handleCancel,
@@ -11,7 +13,7 @@ export const ModalAdd = (props: any) => {
     setEditData,
     setShowModalAdd,
     showModalAdd,
-    products,
+    // products,
   } = props;
   const { TextArea } = Input;
   const [imageUrl, setImageUrl] = useState<any>();
@@ -21,6 +23,8 @@ export const ModalAdd = (props: any) => {
   const [currencyToEdit, setCurrencyToEdit] = useState<string>("bath");
   const [valid, setValid] = useState<boolean>(true);
   const [validationMessages, setValidationMessages] = useState<string[]>([]);
+  const dispatch = useDispatch();
+  const ProductItems = useSelector((state: RootState) => state.product);
 
   const fileRef = useRef<any>();
   const editButton = () => {
@@ -53,21 +57,34 @@ export const ModalAdd = (props: any) => {
       validateForm();
     } else {
       fileRef.current.value = null;
-      setProducts((data: any) => {
-        return [
-          ...data,
-          {
-            id: !products.length
-              ? data.length + 1
-              : products[products.length - 1].id + 1 || 1,
-            title: titleToEdit,
-            detail: detailToEdit,
-            price: priceToEdit,
-            img: imageUrl || noImg,
-            currency: currencyToEdit,
-          },
-        ];
-      });
+      // setProducts((data: any) => {
+      //   return [
+      //     ...data,
+      //     {
+      //       id: !products.length
+      //         ? data.length + 1
+      //         : products[products.length - 1].id + 1 || 1,
+      //       title: titleToEdit,
+      //       detail: detailToEdit,
+      //       price: priceToEdit,
+      //       img: imageUrl || noImg,
+      //       currency: currencyToEdit,
+      //     },
+      //   ];
+      // });
+
+      dispatch(
+        addItem({
+          id: !ProductItems.length
+            ? ProductItems.length + 1
+            : ProductItems[ProductItems.length - 1].id + 1 || 1,
+          title: titleToEdit,
+          detail: detailToEdit,
+          price: priceToEdit,
+          img: imageUrl || noImg,
+          currency: currencyToEdit,
+        })
+      );
       setShowModalAdd(false);
     }
   };

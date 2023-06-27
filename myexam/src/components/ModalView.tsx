@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Select, Button, Alert } from "antd";
 import { EditOutlined, CloseOutlined } from "@ant-design/icons";
 import noImg from "./../assets/No_img.png";
+import { editItem } from "../store/ProductSlice";
+import { useDispatch } from "react-redux";
 type Product = {
   id: number;
   title: string;
@@ -23,7 +25,8 @@ export const ModalView = (props: any) => {
     valid,
   } = props;
   const { TextArea } = Input;
-  // const [imageUrl, setImageUrl] = useState(products.img);
+  const dispatch = useDispatch();
+
   const [validationMessages, setValidationMessages] = useState<string[]>([]);
   const [dataToEdit, setDataToEdit] = useState<Product>({
     id: productView?.id,
@@ -45,11 +48,14 @@ export const ModalView = (props: any) => {
         validateForm();
         setVisible(true);
       } else {
-        setProducts((item: any) => {
-          const editedIndex = item.findIndex((data: any) => data.id === id);
-          item[editedIndex] = dataToEdit;
-          return [...item];
-        });
+        dispatch(editItem(dataToEdit));
+        // setProducts((item: any) => {
+        //   const editedIndex = item.findIndex((data: any) => data.id === id);
+        //   console.log("ed", item[editedIndex]);
+
+        //   item[editedIndex] = dataToEdit;
+        //   return [...item];
+        // });
         setEditData(false);
         setVisible(false);
       }
@@ -138,7 +144,6 @@ export const ModalView = (props: any) => {
                 showIcon
               />
             )}
-            {/* <InputForm></InputForm> */}
             <Input
               className="w-3/5"
               maxLength={20}
